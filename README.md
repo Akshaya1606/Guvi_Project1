@@ -9,9 +9,9 @@ This application is used to create a Streamlit application that allows users to 
 
 #### Get playlist_id
 
-```http
+
   GET youtube/channel/response["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
-```
+
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
@@ -19,9 +19,9 @@ This application is used to create a Streamlit application that allows users to 
 
 #### Get video_id
 
-```http
+
   GET youtube/playlistItems/response['items'][item]['snippet']['resourceId']['videoId']
-```
+
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
@@ -30,9 +30,9 @@ This application is used to create a Streamlit application that allows users to 
 
 #### Get comment_id
 
-```http
+
   GET youtube/commentThread/response["items"][x]["id"]
-```
+
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
