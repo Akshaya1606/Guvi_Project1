@@ -240,6 +240,9 @@ def subdisplay_details(i):
     if i==2:
         mycursor.execute("SELECT  DISTINCT Video_details.channel_id, Channel_details.channel_name from Channel_details JOIN Video_details ON Channel_details.channel_name=Video_details.channel_name")
         out=mycursor.fetchall()
+    if i==3:
+        mycursor.execute("SELECT * from  Channel_details")
+        out=mycursor.fetchall()
     return out
 
 #Query part with connection to SQL Server
@@ -288,7 +291,7 @@ def query_display(i):
     elif i==10:
         mycursor.execute("SELECT channel_name, video_title, CAST(video_comment_count AS SIGNED) as max from Video_details order by max desc  limit 1")
         out1=mycursor.fetchall()
-
+    return out1
 
 #Streamlit part
 st.title('YouTube Data Harvesting and Warehousing using SQL and Streamlit')
@@ -301,7 +304,20 @@ with col1:
         detail=pd.DataFrame(out)
         if user_input in detail[0].values:
             st.warning("Channel data already exists,Please enter a different channelID")
-            
+            subdisplay_details(1)
+            details=pd.DataFrame(out,columns=['Channel_name','Channel_thumbnail','Channel_discription','Channel_view','Channel_video','Channel_subsription','Channel_playlist','Channel_ID','Video_id','Video_title','Video_discription','Video_thumbnail','Video_published_date','Video_comment_count','Video_like_count','Video_favourite_count','Video_duration','Video_view_count','Caption_status','Comment_id','Comment_author','Comment_text','Comment_likes','Comment_published_date'])
+            subdisplay_details(3)
+            channeld=pd.DataFrame(out,columns=['Channel_name','Channel_thumbnail','Channel_discription','Channel_view','Channel_video','Channel_subsription','Channel_playlist'])
+            filtered_df=details[details['Channel_ID'].str.contains(user_input, case=False)]
+            filtered_df1 = details[details['Channel_name'].isin(filtered_df['Channel_name'])]
+            filtered_df01 = filtered_df1.drop_duplicates(subset=['Channel_name'])
+            st.write('Please find the details of the channel')
+            for _, row in filtered_df01.iterrows():
+                st.write(row['Channel_name'])
+                st.image(row['Channel_thumbnail'], use_column_width=True)
+            x=filtered_df01.T
+            st.dataframe(x)
+            st.dataframe(filtered_df)
 
         else:
             control(user_input)
@@ -327,6 +343,21 @@ with col2:
         details=pd.DataFrame(out,columns=['Channel_id','Channel_Name'])
         details.index+=1
         st.dataframe(details)
+    if add_selectbox=="DISPLAY THE DETAILS OF SPECIFIED CHANNEL":
+        subdisplay_details(1)
+        details=pd.DataFrame(out,columns=['Channel_name','Channel_thumbnail','Channel_discription','Channel_view','Channel_video','Channel_subsription','Channel_playlist','Channel_ID','Video_id','Video_title','Video_discription','Video_thumbnail','Video_published_date','Video_comment_count','Video_like_count','Video_favourite_count','Video_duration','Video_view_count','Caption_status','Comment_id','Comment_author','Comment_text','Comment_likes','Comment_published_date'])
+        subdisplay_details(3)
+        channeld=pd.DataFrame(out,columns=['Channel_name','Channel_thumbnail','Channel_discription','Channel_view','Channel_video','Channel_subsription','Channel_playlist'])
+        sd=st.selectbox('Select the channel',details['Channel_name'].unique())
+        filtered_df=details[details['Channel_name']==sd]
+        filtered_df1=channeld[channeld['Channel_name']==sd]
+        st.write('Please find the details of the channel')
+        for _, row in filtered_df1.iterrows():
+                st.write(row['Channel_name'])
+                st.image(row['Channel_thumbnail'], use_column_width=True)
+        x=filtered_df1.T
+        st.dataframe(x)
+        st.dataframe(filtered_df)
 with col3:
     st.write("Please select the query you wish to display")
     add_selectbox = st.selectbox(
