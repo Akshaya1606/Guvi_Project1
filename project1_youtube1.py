@@ -297,15 +297,22 @@ col1,col2,col3 = st.tabs(['Home','Details','Query'])
 with col1:
     user_input=st.text_input("Enter the channelID")
     if st.button("Extract"):
-        control(user_input)
-        st.success("Channel data obtained successfully")
+        subdisplay_details(2)
+        detail=pd.DataFrame(out)
+        if user_input in detail[0].values:
+            st.warning("Channel data already exists,Please enter a different channelID")
+            
 
-        for _, row in fchd.iterrows():
-            st.image(row['channel_thumbnail'], use_column_width=True)
-        x=fchd.T
-        st.dataframe(x)
-        st.write("Please find the details of the youtube Channel")
-        st.dataframe(youtube_details)
+        else:
+            control(user_input)
+            st.success("Channel data obtained successfully")
+    
+            for _, row in fchd.iterrows():
+                st.image(row['channel_thumbnail'], use_column_width=True)
+            x=fchd.T
+            st.dataframe(x)
+            st.write("Please find the details of the youtube Channel")
+            st.dataframe(youtube_details)
 with col2:
 
     st.write("Please find the details of all the youtube channels with video and comment details")
