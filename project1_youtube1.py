@@ -299,36 +299,40 @@ st.write("Welcome to the User friendly Streamlit Application")
 col1,col2,col3 = st.tabs(['Home','Details','Query'])
 with col1:
     user_input=st.text_input("Enter the channelID")
-    if st.button("Extract"):
-        subdisplay_details(2)
-        detail=pd.DataFrame(out)
-        if user_input in detail[0].values:
-            st.warning("Channel data already exists,Please enter a different channelID")
-            subdisplay_details(1)
-            details=pd.DataFrame(out,columns=['Channel_name','Channel_thumbnail','Channel_discription','Channel_view','Channel_video','Channel_subsription','Channel_playlist','Channel_ID','Video_id','Video_title','Video_discription','Video_thumbnail','Video_published_date','Video_comment_count','Video_like_count','Video_favourite_count','Video_duration','Video_view_count','Caption_status','Comment_id','Comment_author','Comment_text','Comment_likes','Comment_published_date'])
-            subdisplay_details(3)
-            channeld=pd.DataFrame(out,columns=['Channel_name','Channel_thumbnail','Channel_discription','Channel_view','Channel_video','Channel_subsription','Channel_playlist'])
-            filtered_df=details[details['Channel_ID'].str.contains(user_input, case=False)]
-            filtered_df1 = details[details['Channel_name'].isin(filtered_df['Channel_name'])]
-            filtered_df01 = filtered_df1.drop_duplicates(subset=['Channel_name'])
-            st.write('Please find the details of the channel')
-            for _, row in filtered_df01.iterrows():
-                st.write(row['Channel_name'])
-                st.image(row['Channel_thumbnail'], use_column_width=True)
-            x=filtered_df01.T
-            st.dataframe(x)
-            st.dataframe(filtered_df)
-
-        else:
-            control(user_input)
-            st.success("Channel data obtained successfully")
+    try:
+        if st.button("Extract"):
+            subdisplay_details(2)
+            detail=pd.DataFrame(out)
+            if user_input in detail[0].values:
+                st.warning("Channel data already exists,Please enter a different channelID")
+                subdisplay_details(1)
+                details=pd.DataFrame(out,columns=['Channel_name','Channel_thumbnail','Channel_discription','Channel_view','Channel_video','Channel_subsription','Channel_playlist','Channel_ID','Video_id','Video_title','Video_discription','Video_thumbnail','Video_published_date','Video_comment_count','Video_like_count','Video_favourite_count','Video_duration','Video_view_count','Caption_status','Comment_id','Comment_author','Comment_text','Comment_likes','Comment_published_date'])
+                subdisplay_details(3)
+                channeld=pd.DataFrame(out,columns=['Channel_name','Channel_thumbnail','Channel_discription','Channel_view','Channel_video','Channel_subsription','Channel_playlist'])
+                filtered_df=details[details['Channel_ID'].str.contains(user_input, case=False)]
+                filtered_df1 = details[details['Channel_name'].isin(filtered_df['Channel_name'])]
+                filtered_df01 = filtered_df1.drop_duplicates(subset=['Channel_name'])
+                st.write('Please find the details of the channel')
+                for _, row in filtered_df01.iterrows():
+                    st.write(row['Channel_name'])
+                    st.image(row['Channel_thumbnail'], use_column_width=True)
+                x=filtered_df01.T
+                st.dataframe(x)
+                st.dataframe(filtered_df)
     
-            for _, row in fchd.iterrows():
-                st.image(row['channel_thumbnail'], use_column_width=True)
-            x=fchd.T
-            st.dataframe(x)
-            st.write("Please find the details of the youtube Channel")
-            st.dataframe(youtube_details)
+            else:
+                control(user_input)
+                st.success("Channel data obtained successfully")
+        
+                for _, row in fchd.iterrows():
+                    st.image(row['channel_thumbnail'], use_column_width=True)
+                x=fchd.T
+                st.dataframe(x)
+                st.write("Please find the details of the youtube Channel")
+                st.dataframe(youtube_details)
+    except:
+        st.warning('The given channel did not meet the required format,please try another channel.')
+        pass
 with col2:
 
     st.write("Please find the details of all the youtube channels with video and comment details")
